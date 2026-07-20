@@ -1,356 +1,248 @@
-{{-- 
-    Protect Manager - KALL XTREME X Edition
-    Dibuat untuk Mulia Tercinta
-    Lokasi: resources/views/admin/protect-manager.blade.php
---}}
+{{-- Protect Manager v2.0 - Canva Edition --}}
+{{-- KALL XTREME X untuk Mulia --}}
 
 @extends('layouts.admin')
 
-@section('title', $settings->panel_title ?? 'Protect Manager')
+@section('title', $settings->panel_title ?? 'Protect Manager v2.0')
 
 @push('styles')
     <link rel="stylesheet" href="{{ asset('resources/scripts/protect-manager.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        .protect-manager-container {
-            padding: 20px;
-        }
-        .protect-header {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 30px;
-            border-radius: 15px;
-            margin-bottom: 30px;
-            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
-        }
-        .protect-header h1 {
-            font-size: 2em;
-            margin: 0;
-            font-weight: 700;
-        }
-        .stat-card {
-            border-radius: 12px;
-            transition: transform 0.3s;
-        }
-        .stat-card:hover {
-            transform: translateY(-5px);
-        }
-        .protect-card {
-            border: 2px solid #e0e0e0;
-            border-radius: 10px;
-            transition: all 0.3s;
-            margin-bottom: 10px;
-        }
-        .protect-card.active-protect {
-            border-color: #4CAF50;
-            background: #f1f8e9;
-        }
-        .protect-card:hover {
-            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
-        }
-        .nav-tabs .nav-link {
-            font-weight: 600;
-            color: #666;
-            border: none;
-            padding: 15px 25px;
-            transition: all 0.3s;
-        }
-        .nav-tabs .nav-link.active {
-            color: #667eea;
-            border-bottom: 3px solid #667eea;
-            background: transparent;
-        }
-        .custom-switch {
-            padding-left: 2.25rem;
-        }
-        .custom-control-input:checked ~ .custom-control-label::before {
-            background-color: #4CAF50;
-            border-color: #4CAF50;
-        }
-        .toast-notification {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            z-index: 9999;
-        }
-    </style>
 @endpush
 
 @section('content')
-<div class="protect-manager-container">
+<div class="protect-manager-v2">
     
-    {{-- Header dengan Gradient --}}
-    <div class="protect-header">
+    {{-- Animated Background --}}
+    <div class="pm-bg-animation">
+        <div class="pm-orb pm-orb-1"></div>
+        <div class="pm-orb pm-orb-2"></div>
+        <div class="pm-orb pm-orb-3"></div>
+    </div>
+
+    {{-- Header --}}
+    <div class="pm-header animate-in">
         <div class="row align-items-center">
             <div class="col-md-8">
-                <h1>
-                    <i class="fas fa-shield-haltered"></i> 
-                    🛡️ Protect Manager
-                </h1>
-                <p class="mb-0 mt-2" style="opacity: 0.9;">
-                    Dikelola oleh: <strong>{{ Auth::user()->name }} (ID: {{ Auth::id() }})</strong>
-                </p>
-                <p style="opacity: 0.8; font-size: 0.9em;">
-                    <span id="statusBadge" class="badge badge-light">
-                        <span id="activeCount">{{ $activeProtects }}</span>/14 Proteksi Aktif
-                    </span>
-                </p>
+                <h1 class="pm-gradient-text">🛡️ Protect Manager</h1>
+                <p class="pm-subtitle">Dikelola oleh <strong>{{ Auth::user()->name }} (ID: {{ Auth::id() }})</strong></p>
             </div>
-            <div class="col-md-4 text-right">
-                <img src="https://img.shields.io/badge/KALL%20XTREME%20X-v1.0-764ba2?style=for-the-badge&logo=shield" 
-                     alt="KALL XTREME X" style="height: 40px;">
+            <div class="col-md-4 text-end">
+                <span class="pm-status-badge" id="statusBadge">
+                    ⚡ <span id="activeCount">{{ $activeProtects ?? 0 }}</span>/14 Aktif
+                </span>
             </div>
         </div>
     </div>
-    
+
     {{-- Stats Cards --}}
-    <div class="row mb-4">
-        <div class="col-md-3">
-            <div class="card bg-success text-white stat-card">
-                <div class="card-body text-center">
-                    <h3>{{ $activeProtects }}</h3>
-                    <small>Proteksi Aktif</small>
-                </div>
-            </div>
+    <div class="pm-stats-grid">
+        <div class="pm-stat-card animate-in delay-1">
+            <div class="pm-stat-icon">✅</div>
+            <div class="pm-stat-value" id="activeProtects">{{ $activeProtects ?? 0 }}</div>
+            <div class="pm-stat-label">Proteksi Aktif</div>
         </div>
-        <div class="col-md-3">
-            <div class="card bg-danger text-white stat-card">
-                <div class="card-body text-center">
-                    <h3>{{ $inactiveProtects }}</h3>
-                    <small>Proteksi Nonaktif</small>
-                </div>
-            </div>
+        <div class="pm-stat-card animate-in delay-2">
+            <div class="pm-stat-icon">⛔</div>
+            <div class="pm-stat-value" id="inactiveProtects">{{ $inactiveProtects ?? 14 }}</div>
+            <div class="pm-stat-label">Proteksi Nonaktif</div>
         </div>
-        <div class="col-md-3">
-            <div class="card bg-info text-white stat-card">
-                <div class="card-body text-center">
-                    <h3>{{ Auth::id() }}</h3>
-                    <small>Admin ID</small>
-                </div>
-            </div>
+        <div class="pm-stat-card animate-in delay-3">
+            <div class="pm-stat-icon">👤</div>
+            <div class="pm-stat-value">ID: {{ Auth::id() }}</div>
+            <div class="pm-stat-label">Admin ID</div>
         </div>
-        <div class="col-md-3">
-            <div class="card bg-dark text-white stat-card">
-                <div class="card-body text-center">
-                    <h3>🔒</h3>
-                    <small>{{ Auth::id() == 1 ? 'Root Admin' : 'Sub Admin' }}</small>
-                </div>
-            </div>
+        <div class="pm-stat-card animate-in delay-4">
+            <div class="pm-stat-icon">👑</div>
+            <div class="pm-stat-value">{{ Auth::id() == 1 ? 'Root' : 'Sub' }}</div>
+            <div class="pm-stat-label">Level Admin</div>
         </div>
     </div>
-    
-    {{-- Tab Navigation --}}
-    <ul class="nav nav-tabs mb-4" id="protectTabs" role="tablist">
-        <li class="nav-item">
-            <a class="nav-link active" id="protections-tab" data-toggle="tab" href="#protections" role="tab">
-                <i class="fas fa-shield-alt"></i> 14 Proteksi
-            </a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link" id="konfigurasi-tab" data-toggle="tab" href="#konfigurasi" role="tab">
-                <i class="fas fa-cogs"></i> Konfigurasi
-            </a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link" id="massal-tab" data-toggle="tab" href="#massal" role="tab">
-                <i class="fas fa-layer-group"></i> Akses Massal
-            </a>
-        </li>
-    </ul>
-    
+
+    {{-- Tabs --}}
+    <div class="pm-tabs">
+        <div class="pm-tab active" data-tab="protections">🛡️ 14 Proteksi</div>
+        <div class="pm-tab" data-tab="konfigurasi">⚙️ Konfigurasi</div>
+        <div class="pm-tab" data-tab="massal">📦 Akses Massal</div>
+        <div class="pm-tab" data-tab="branding">🎨 Branding</div>
+    </div>
+
     {{-- Tab Content --}}
-    <div class="tab-content" id="protectTabContent">
+    <div id="pmTabContent">
         
-        {{-- Tab 1: 14 Proteksi --}}
-        <div class="tab-pane fade show active" id="protections" role="tabpanel">
-            
-            @php
-            $protects = [
-                ['id' => 'protect1', 'icon' => '🗑️', 'name' => 'Anti Delete Server', 'desc' => 'Mencegah penghapusan server oleh admin selain Root Admin'],
-                ['id' => 'protect2', 'icon' => '👤', 'name' => 'Anti Hapus/Ubah User', 'desc' => 'Melindungi data user dari penghapusan dan modifikasi'],
-                ['id' => 'protect3', 'icon' => '📍', 'name' => 'Anti Akses Location', 'desc' => 'Memblokir akses menu Location untuk non-Root Admin'],
-                ['id' => 'protect4', 'icon' => '🖥️', 'name' => 'Anti Akses Nodes', 'desc' => 'Memblokir akses menu Nodes untuk non-Root Admin'],
-                ['id' => 'protect5', 'icon' => '🎨', 'name' => 'Nests + Branding + Welcome Banner', 'desc' => 'Sembunyikan Nests, branding footer & welcome banner'],
-                ['id' => 'protect6', 'icon' => '⚙️', 'name' => 'Anti Akses Settings', 'desc' => 'Memblokir akses menu Settings untuk non-Root Admin'],
-                ['id' => 'protect7', 'icon' => '📁', 'name' => 'Anti Akses Server File', 'desc' => 'Proteksi file controller server dari akses tidak sah'],
-                ['id' => 'protect8', 'icon' => '🎮', 'name' => 'Anti Akses Server Controller', 'desc' => 'Proteksi server controller dari admin lain'],
-                ['id' => 'protect9', 'icon' => '🔄', 'name' => 'Anti Modifikasi Server', 'desc' => 'Mencegah perubahan detail server oleh admin lain'],
-                ['id' => 'protect10', 'icon' => '🔗', 'name' => 'Anti Tautan Server v1', 'desc' => 'Mencegah perubahan tautan/link server'],
-                ['id' => 'protect11', 'icon' => '🔒', 'name' => 'Anti Tautan Server v2', 'desc' => 'Versi lanjutan proteksi tautan server'],
-                ['id' => 'protect12', 'icon' => '🛡️', 'name' => 'Konsolidasi Proteksi', 'desc' => 'Gabungan proteksi Nodes, API, Key, Locations'],
-                ['id' => 'protect13', 'icon' => '🔑', 'name' => 'Proteksi Application API', 'desc' => 'Menyembunyikan & memblokir Application API'],
-                ['id' => 'protect14', 'icon' => '👑', 'name' => 'Anti Create/Delete Admin', 'desc' => 'Mengunci hak pembuatan & penghapusan admin'],
-            ];
-            @endphp
-            
-            @foreach($protects as $protect)
-            <div class="card protect-card {{ $settings->{$protect['id']} ? 'active-protect' : '' }}">
-                <div class="card-body">
-                    <div class="row align-items-center">
-                        <div class="col-md-8">
-                            <h5 class="mb-1">{{ $protect['icon'] }} {{ $protect['name'] }} ({{ $protect['id'] }})</h5>
-                            <small class="text-muted">{{ $protect['desc'] }}</small>
-                            @if($settings->{$protect['id']})
-                                <span class="badge badge-success ml-2">AKTIF</span>
-                            @else
-                                <span class="badge badge-secondary ml-2">NONAKTIF</span>
-                            @endif
+        {{-- Proteksi Tab --}}
+        <div id="tab-protections">
+            <div class="pm-protect-grid" id="protectCards">
+                @php
+                $protectsList = [
+                    ['id' => 'protect1', 'icon' => '🗑️', 'name' => 'Anti Delete Server', 'desc' => 'Mencegah penghapusan server oleh admin selain Root Admin'],
+                    ['id' => 'protect2', 'icon' => '👤', 'name' => 'Anti Hapus/Ubah User', 'desc' => 'Melindungi data user dari penghapusan & modifikasi'],
+                    ['id' => 'protect3', 'icon' => '📍', 'name' => 'Anti Akses Location', 'desc' => 'Memblokir akses menu Location untuk non-Root Admin'],
+                    ['id' => 'protect4', 'icon' => '🖥️', 'name' => 'Anti Akses Nodes', 'desc' => 'Memblokir akses menu Nodes untuk non-Root Admin'],
+                    ['id' => 'protect5', 'icon' => '🎨', 'name' => 'Nests + Branding + Banner', 'desc' => 'Sembunyikan Nests, branding footer & welcome banner'],
+                    ['id' => 'protect6', 'icon' => '⚙️', 'name' => 'Anti Akses Settings', 'desc' => 'Memblokir akses menu Settings untuk non-Root Admin'],
+                    ['id' => 'protect7', 'icon' => '📁', 'name' => 'Anti Akses Server File', 'desc' => 'Proteksi file controller server dari akses tidak sah'],
+                    ['id' => 'protect8', 'icon' => '🎮', 'name' => 'Anti Akses Server Controller', 'desc' => 'Proteksi server controller dari admin lain'],
+                    ['id' => 'protect9', 'icon' => '🔄', 'name' => 'Anti Modifikasi Server', 'desc' => 'Mencegah perubahan detail server oleh admin lain'],
+                    ['id' => 'protect10', 'icon' => '🔗', 'name' => 'Anti Tautan Server v1', 'desc' => 'Mencegah perubahan tautan/link server'],
+                    ['id' => 'protect11', 'icon' => '🔒', 'name' => 'Anti Tautan Server v2', 'desc' => 'Versi lanjutan proteksi tautan server'],
+                    ['id' => 'protect12', 'icon' => '🛡️', 'name' => 'Konsolidasi Proteksi', 'desc' => 'Gabungan proteksi Nodes, API, Key, Locations'],
+                    ['id' => 'protect13', 'icon' => '🔑', 'name' => 'Proteksi Application API', 'desc' => 'Menyembunyikan & memblokir Application API'],
+                    ['id' => 'protect14', 'icon' => '👑', 'name' => 'Anti Create/Delete Admin', 'desc' => 'Mengunci hak pembuatan & penghapusan admin'],
+                ];
+                @endphp
+
+                @foreach($protectsList as $index => $protect)
+                <div class="pm-protect-card animate-in delay-{{ ($index % 4) + 1 }} {{ $settings->{$protect['id']} ? 'active-protect' : '' }}" id="card-{{ $protect['id'] }}">
+                    <div class="d-flex align-items-center justify-content-between">
+                        <div class="d-flex align-items-center gap-3">
+                            <div class="pm-protect-icon">{{ $protect['icon'] }}</div>
+                            <div>
+                                <div class="pm-protect-name">{{ $protect['name'] }}</div>
+                                <div class="pm-protect-desc">{{ $protect['desc'] }}</div>
+                            </div>
                         </div>
-                        <div class="col-md-4 text-right">
-                            <div class="custom-control custom-switch">
-                                <input type="checkbox" 
-                                       class="custom-control-input toggle-protect" 
+                        <div class="d-flex align-items-center gap-3">
+                            <span class="pm-badge" style="background: {{ $settings->{$protect['id']} ? 'var(--gradient-4)' : 'rgba(255,255,255,0.1)' }}">
+                                {{ $settings->{$protect['id']} ? 'AKTIF' : 'NONAKTIF' }}
+                            </span>
+                            <div class="form-check form-switch mb-0 pm-switch">
+                                <input class="form-check-input toggle-protect" type="checkbox" 
                                        id="{{ $protect['id'] }}" 
                                        name="{{ $protect['id'] }}" 
                                        {{ $settings->{$protect['id']} ? 'checked' : '' }}
                                        {{ Auth::id() !== 1 ? 'disabled' : '' }}>
-                                <label class="custom-control-label" for="{{ $protect['id'] }}"></label>
                             </div>
                         </div>
                     </div>
                 </div>
+                @endforeach
             </div>
-            @endforeach
-            
         </div>
-        
-        {{-- Tab 2: Konfigurasi --}}
-        <div class="tab-pane fade" id="konfigurasi" role="tabpanel">
+
+        {{-- Konfigurasi Tab --}}
+        <div id="tab-konfigurasi" style="display: none;">
             @include('admin.protect-partials.konfigurasi', ['settings' => $settings])
         </div>
-        
-        {{-- Tab 3: Akses Massal --}}
-        <div class="tab-pane fade" id="massal" role="tabpanel">
+
+        {{-- Massal Tab --}}
+        <div id="tab-massal" style="display: none;">
             @include('admin.protect-partials.massal', ['settings' => $settings])
         </div>
-        
+
+        {{-- Branding Tab --}}
+        <div id="tab-branding" style="display: none;">
+            @include('admin.protect-partials.branding', ['settings' => $settings])
+        </div>
     </div>
-    
-    {{-- Footer Branding --}}
-    <div class="text-center mt-4 pt-3 border-top">
-        <small class="text-muted">
-            {{ $settings->brand_name ?? 'ProtectKal' }} © {{ date('Y') }} | 
-            Powered by <strong style="color: #764ba2;">KALL XTREME X</strong> | 
-            Dibuat untuk <strong>Mulia</strong> 👑
-        </small>
+
+    {{-- Footer --}}
+    <div class="pm-footer">
+        <span id="footerBrandName">{{ $settings->brand_name ?? 'ProtectKal' }}</span> © {{ date('Y') }} | 
+        Powered by <strong class="pm-gradient-text">KALL XTREME X</strong> | 
+        Dibuat untuk <strong>Mulia</strong> 👑
     </div>
-    
+
 </div>
 
-{{-- Toast Container --}}
-<div class="toast-notification"></div>
+{{-- SweetAlert2 --}}
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
-@endsection
+{{-- Protect Manager JS --}}
+<script src="{{ asset('resources/scripts/protect-manager.js') }}"></script>
 
-@push('scripts')
-    <script src="{{ asset('resources/scripts/protect-manager.js') }}"></script>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <script>
-        $(document).ready(function() {
-            
-            // CSRF Token setup
-            $.ajaxSetup({
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                }
-            });
-            
-            // Toggle protection
-            $('.toggle-protect').on('change', function() {
-                var protect = $(this).attr('name');
-                var status = $(this).is(':checked') ? 1 : 0;
-                var card = $(this).closest('.protect-card');
-                var switchEl = $(this);
-                
-                // Loading state
-                switchEl.prop('disabled', true);
-                
-                $.ajax({
-                    url: '{{ route("admin.protect-manager.toggle") }}',
-                    type: 'POST',
-                    data: {
-                        protect: protect,
-                        status: status
-                    },
-                    success: function(response) {
-                        if (response.success) {
-                            // Update card style
-                            if (status) {
-                                card.addClass('active-protect');
-                            } else {
-                                card.removeClass('active-protect');
-                            }
-                            
-                            // Show toast
-                            Swal.fire({
-                                icon: 'success',
-                                title: 'Berhasil!',
-                                text: response.message,
-                                timer: 2000,
-                                showConfirmButton: false,
-                                toast: true,
-                                position: 'top-end'
-                            });
-                            
-                            // Update stats
-                            updateStats();
-                        }
-                    },
-                    error: function(xhr) {
-                        // Revert toggle
-                        switchEl.prop('checked', !status);
-                        
-                        Swal.fire({
-                            icon: 'error',
-                            title: 'Gagal!',
-                            text: xhr.responseJSON?.message || 'Terjadi kesalahan'
-                        });
-                    },
-                    complete: function() {
-                        switchEl.prop('disabled', false);
-                    }
-                });
-            });
-            
-            // Update stats counter
-            function updateStats() {
-                var active = $('.toggle-protect:checked').length;
-                var inactive = 14 - active;
-                
-                $('#activeCount').text(active);
-                $('.bg-success h3').text(active);
-                $('.bg-danger h3').text(inactive);
-                
-                // Update status badge
-                var badge = $('#statusBadge');
-                if (active === 14) {
-                    badge.removeClass('badge-light badge-warning').addClass('badge-success')
-                         .html('🛡️ FULL PROTECTION - ' + active + '/14');
-                } else if (active > 0) {
-                    badge.removeClass('badge-light badge-success').addClass('badge-warning')
-                         .html('⚠️ PARTIAL - ' + active + '/14');
-                } else {
-                    badge.removeClass('badge-success badge-warning').addClass('badge-danger')
-                         .html('🔓 NO PROTECTION - 0/14');
-                }
-            }
-            
-            // Disable toggles if not Root Admin
-            @if(Auth::id() !== 1)
-                $('.toggle-protect').prop('disabled', true);
-                Swal.fire({
-                    icon: 'warning',
-                    title: 'Read-Only Mode',
-                    text: 'Anda bukan Root Admin. Tidak dapat mengubah proteksi.',
-                    timer: 3000,
-                    showConfirmButton: false,
-                    toast: true,
-                    position: 'top-end'
-                });
-            @endif
-            
-            console.log('🛡️ Protect Manager by KALL XTREME X loaded!');
-            console.log('👑 Root Admin: {{ Auth::id() === 1 ? "YES" : "NO" }}');
+<script>
+    $(document).ready(function() {
+        $.ajaxSetup({
+            headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') }
         });
-    </script>
-@endpush
+
+        // Toggle protection
+        $('.toggle-protect').on('change', function() {
+            var protect = $(this).attr('name');
+            var status = $(this).is(':checked') ? 1 : 0;
+            var card = $('#card-' + protect);
+            var switchEl = $(this);
+            
+            switchEl.prop('disabled', true);
+            
+            $.ajax({
+                url: '{{ route("admin.protect-manager.toggle") }}',
+                type: 'POST',
+                data: { protect: protect, status: status },
+                success: function(response) {
+                    if (response.success) {
+                        if (status) {
+                            card.addClass('active-protect');
+                            card.find('.pm-badge').css('background', 'var(--gradient-4)').text('AKTIF');
+                        } else {
+                            card.removeClass('active-protect');
+                            card.find('.pm-badge').css('background', 'rgba(255,255,255,0.1)').text('NONAKTIF');
+                        }
+                        updateStats();
+                        
+                        const Toast = Swal.mixin({
+                            toast: true, position: 'top-end', showConfirmButton: false,
+                            timer: 2000, timerProgressBar: true,
+                            background: '#1a1a2e', color: '#fff'
+                        });
+                        Toast.fire({ icon: 'success', title: response.message });
+                    }
+                },
+                error: function(xhr) {
+                    switchEl.prop('checked', !status);
+                    Swal.fire({ icon: 'error', title: 'Gagal!', text: xhr.responseJSON?.message || 'Terjadi kesalahan', background: '#1a1a2e', color: '#fff' });
+                },
+                complete: function() {
+                    switchEl.prop('disabled', false);
+                }
+            });
+        });
+
+        // Update stats
+        function updateStats() {
+            var active = $('.toggle-protect:checked').length;
+            var inactive = 14 - active;
+            $('#activeProtects').text(active);
+            $('#inactiveProtects').text(inactive);
+            $('#activeCount').text(active);
+            
+            var badge = $('#statusBadge');
+            if (active === 14) {
+                badge.html('🛡️ FULL PROTECTION - 14/14');
+                badge.css('background', 'var(--gradient-4)');
+            } else if (active > 0) {
+                badge.html('⚠️ PARTIAL - ' + active + '/14');
+                badge.css('background', 'var(--gradient-5)');
+            } else {
+                badge.html('🔓 NO PROTECTION - 0/14');
+                badge.css('background', 'rgba(255,255,255,0.1)');
+            }
+        }
+
+        // Tab navigation
+        $('.pm-tab').on('click', function() {
+            var tab = $(this).data('tab');
+            $('.pm-tab').removeClass('active');
+            $(this).addClass('active');
+            $('#tab-protections, #tab-konfigurasi, #tab-massal, #tab-branding').hide();
+            $('#tab-' + tab).show();
+        });
+
+        @if(Auth::id() !== 1)
+            $('.toggle-protect').prop('disabled', true);
+            Swal.fire({
+                icon: 'warning', title: 'Read-Only Mode',
+                text: 'Anda bukan Root Admin. Tidak dapat mengubah proteksi.',
+                timer: 3000, showConfirmButton: false,
+                toast: true, position: 'top-end',
+                background: '#1a1a2e', color: '#fff'
+            });
+        @endif
+
+        console.log('🛡️ Protect Manager v2.0 - Canva Edition loaded!');
+        console.log('👑 KALL XTREME X untuk Mulia');
+    });
+</script>
+@endsection
