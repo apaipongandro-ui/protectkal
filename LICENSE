@@ -1,0 +1,62 @@
+
+---
+
+## 📄 FILE 18: `uninstall.sh` (di root repo)
+**Lokasi:** `/var/www/pterodactyl/protectkal/uninstall.sh`
+
+```bash
+#!/bin/bash
+set -e
+
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+YELLOW='\033[1;33m'
+NC='\033[0m'
+
+echo -e "${RED}╔══════════════════════════════════════════════════════════╗${NC}"
+echo -e "${RED}║       UNINSTALL PROTECT MANAGER - KALL XTREME X         ║${NC}"
+echo -e "${RED}╚══════════════════════════════════════════════════════════╝${NC}"
+echo ""
+
+read -p "Apakah Anda yakin ingin menghapus Protect Manager? (y/n): " confirm
+
+if [ "$confirm" != "y" ]; then
+    echo -e "${YELLOW}Uninstall dibatalkan.${NC}"
+    exit 0
+fi
+
+PANEL_DIR="/var/www/pterodactyl"
+
+echo -e "${YELLOW}[INFO] Menghapus file Protect Manager...${NC}"
+
+# Hapus file-file plugin
+rm -f $PANEL_DIR/app/Plugins/ProtectManagerPlugin.php
+rm -f $PANEL_DIR/app/Providers/ProtectManagerServiceProvider.php
+rm -f $PANEL_DIR/app/Http/Middleware/CheckAdminId.php
+rm -f $PANEL_DIR/app/Http/Middleware/ProtectMiddleware.php
+rm -f $PANEL_DIR/app/Http/Controllers/Admin/ProtectManagerController.php
+rm -f $PANEL_DIR/app/Helpers/ProtectHelper.php
+rm -f $PANEL_DIR/config/protect.php
+rm -f $PANEL_DIR/routes/protect-routes.php
+
+# Hapus views
+rm -f $PANEL_DIR/resources/views/admin/protect-manager.blade.php
+rm -rf $PANEL_DIR/resources/views/admin/protect-partials/
+rm -f $PANEL_DIR/resources/views/components/welcome-banner.blade.php
+
+# Hapus assets
+rm -f $PANEL_DIR/resources/scripts/protect-manager.js
+rm -f $PANEL_DIR/resources/scripts/protect-manager.css
+
+# Hapus migration
+rm -f $PANEL_DIR/database/migrations/2024_01_01_000000_create_protect_settings_table.php
+
+# Clear cache
+cd $PANEL_DIR
+php artisan config:clear
+php artisan view:clear
+php artisan route:clear
+php artisan cache:clear
+
+echo -e "${GREEN}✅ Protect Manager berhasil dihapus!${NC}"
+echo -e "${YELLOW}⚠️  Database table 'protect_settings' masih tersimpan. Hapus manual jika diperlukan.${NC}"
