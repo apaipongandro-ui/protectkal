@@ -1,194 +1,125 @@
-{{-- Konfigurasi Tab - Protect Manager --}}
+{{-- Konfigurasi Tab - Canva Edition --}}
 
-<div class="card">
-    <div class="card-header bg-primary text-white">
-        <h5 class="mb-0"><i class="fas fa-cogs"></i> Konfigurasi Protect Manager</h5>
-    </div>
-    <div class="card-body">
-        <form id="configForm">
-            @csrf
-            
-            <h6 class="text-primary mb-3">
-                <i class="fas fa-paint-brush"></i> Identitas Brand (Branding)
-            </h6>
-            
-            <div class="row">
-                <div class="col-md-6">
-                    <div class="form-group">
-                        <label>Nama Brand</label>
-                        <input type="text" name="brand_name" class="form-control" 
-                               value="{{ $settings->brand_name ?? 'ProtectKal' }}"
-                               placeholder="Masukkan nama brand">
-                        <small class="text-muted">Nama brand yang tampil di footer panel</small>
-                    </div>
-                </div>
-                <div class="col-md-6">
-                    <div class="form-group">
-                        <label>Judul Panel (Title Bar)</label>
-                        <input type="text" name="panel_title" class="form-control" 
-                               value="{{ $settings->panel_title ?? 'Pterodactyl Panel' }}"
-                               placeholder="Judul di tab browser">
-                        <small class="text-muted">Tag &lt;title&gt; pada browser</small>
-                    </div>
+<div class="pm-header" style="border-radius: 25px; padding: 30px; margin-bottom: 0;">
+    <h5 style="font-weight: 700; margin-bottom: 25px;">⚙️ Konfigurasi Protect Manager</h5>
+    
+    <form id="configForm">
+        @csrf
+        
+        <h6 style="color: #A78BFA; margin-bottom: 20px; font-weight: 700;">
+            <i class="fas fa-paint-brush me-2"></i> Identitas Brand
+        </h6>
+        
+        <div class="row g-3 mb-4">
+            <div class="col-md-6">
+                <label class="form-label" style="color: var(--text-secondary); font-size: 0.85em; font-weight: 600;">Nama Brand</label>
+                <input type="text" name="brand_name" class="form-control pm-input" value="{{ $settings->brand_name ?? 'ProtectKal' }}" placeholder="Nama brand">
+            </div>
+            <div class="col-md-6">
+                <label class="form-label" style="color: var(--text-secondary); font-size: 0.85em; font-weight: 600;">Judul Panel</label>
+                <input type="text" name="panel_title" class="form-control pm-input" value="{{ $settings->panel_title ?? 'Pterodactyl Panel' }}" placeholder="Judul di tab browser">
+            </div>
+            <div class="col-md-6">
+                <label class="form-label" style="color: var(--text-secondary); font-size: 0.85em; font-weight: 600;">Teks Proteksi (Badge)</label>
+                <input type="text" name="protection_text" class="form-control pm-input" value="{{ $settings->protection_text ?? '🛡️ Protected by ProtectKal' }}" placeholder="Teks badge">
+            </div>
+            <div class="col-md-6">
+                <label class="form-label" style="color: var(--text-secondary); font-size: 0.85em; font-weight: 600;">Label Brand</label>
+                <input type="text" name="label_brand" class="form-control pm-input" value="{{ $settings->label_brand ?? 'ProtectKal' }}" placeholder="Label brand">
+            </div>
+        </div>
+        
+        <hr style="border-color: var(--glass-border);">
+        
+        <h6 style="color: #A78BFA; margin-bottom: 20px; font-weight: 700;">
+            <i class="fab fa-telegram me-2"></i> Integrasi Telegram
+        </h6>
+        
+        <div class="row g-3 mb-4">
+            <div class="col-md-6">
+                <label class="form-label" style="color: var(--text-secondary); font-size: 0.85em; font-weight: 600;">Telegram Admin 1</label>
+                <input type="text" name="telegram_admin1" class="form-control pm-input" value="{{ $settings->telegram_admin1 ?? '' }}" placeholder="@admin1">
+            </div>
+            <div class="col-md-6">
+                <label class="form-label" style="color: var(--text-secondary); font-size: 0.85em; font-weight: 600;">Telegram Admin 2</label>
+                <input type="text" name="telegram_admin2" class="form-control pm-input" value="{{ $settings->telegram_admin2 ?? '' }}" placeholder="@admin2">
+            </div>
+            <div class="col-md-6">
+                <label class="form-label" style="color: var(--text-secondary); font-size: 0.85em; font-weight: 600;">Username Bot Telegram</label>
+                <input type="text" name="telegram_bot_username" class="form-control pm-input" value="{{ $settings->telegram_bot_username ?? '' }}" placeholder="@botname">
+            </div>
+        </div>
+        
+        <hr style="border-color: var(--glass-border);">
+        
+        <h6 style="color: #A78BFA; margin-bottom: 20px; font-weight: 700;">
+            <i class="fas fa-flag me-2"></i> Welcome Banner
+        </h6>
+        
+        <div class="row g-3 mb-4">
+            <div class="col-md-6">
+                <label class="form-label" style="color: var(--text-secondary); font-size: 0.85em; font-weight: 600;">Judul Banner</label>
+                <input type="text" name="welcome_title" class="form-control pm-input" value="{{ $settings->welcome_title ?? 'Selamat Datang!' }}" placeholder="Judul welcome banner">
+            </div>
+            <div class="col-md-6">
+                <label class="form-label" style="color: var(--text-secondary); font-size: 0.85em; font-weight: 600;">Tampilkan Banner</label>
+                <div class="form-check form-switch pm-switch mt-2">
+                    <input class="form-check-input" type="checkbox" name="show_banner" value="1" {{ $settings->show_banner ? 'checked' : '' }}>
+                    <label class="form-check-label" style="color: var(--text-secondary);">{{ $settings->show_banner ? 'Aktif' : 'Nonaktif' }}</label>
                 </div>
             </div>
-            
-            <div class="row">
-                <div class="col-md-6">
-                    <div class="form-group">
-                        <label>Teks Proteksi (Badge)</label>
-                        <input type="text" name="protection_text" class="form-control" 
-                               value="{{ $settings->protection_text ?? '🛡️ Protected by ProtectKal' }}"
-                               placeholder="Teks badge proteksi">
-                    </div>
-                </div>
-                <div class="col-md-6">
-                    <div class="form-group">
-                        <label>Label Brand</label>
-                        <input type="text" name="label_brand" class="form-control" 
-                               value="{{ $settings->label_brand ?? 'ProtectKal' }}"
-                               placeholder="Label brand">
-                    </div>
-                </div>
+            <div class="col-12">
+                <label class="form-label" style="color: var(--text-secondary); font-size: 0.85em; font-weight: 600;">Pesan Banner</label>
+                <textarea name="welcome_message" class="form-control pm-input" rows="4" placeholder="Pesan selamat datang...">{{ $settings->welcome_message ?? '' }}</textarea>
             </div>
-            
-            <hr>
-            
-            <h6 class="text-primary mb-3">
-                <i class="fas fa-paper-plane"></i> Kontak & Bot Integrasi (Telegram)
-            </h6>
-            
-            <div class="row">
-                <div class="col-md-6">
-                    <div class="form-group">
-                        <label>Telegram Admin 1 (@username)</label>
-                        <input type="text" name="telegram_admin1" class="form-control" 
-                               value="{{ $settings->telegram_admin1 ?? '' }}"
-                               placeholder="@admin1">
-                    </div>
-                </div>
-                <div class="col-md-6">
-                    <div class="form-group">
-                        <label>Telegram Admin 2 (@username)</label>
-                        <input type="text" name="telegram_admin2" class="form-control" 
-                               value="{{ $settings->telegram_admin2 ?? '' }}"
-                               placeholder="@admin2">
-                    </div>
-                </div>
-            </div>
-            
-            <div class="row">
-                <div class="col-md-6">
-                    <div class="form-group">
-                        <label>Username Bot Telegram</label>
-                        <input type="text" name="telegram_bot_username" class="form-control" 
-                               value="{{ $settings->telegram_bot_username ?? '' }}"
-                               placeholder="@BotName">
-                    </div>
-                </div>
-            </div>
-            
-            <hr>
-            
-            <h6 class="text-primary mb-3">
-                <i class="fas fa-flag"></i> Welcome Banner (Client Dashboard)
-            </h6>
-            
-            <div class="row">
-                <div class="col-md-6">
-                    <div class="form-group">
-                        <label>Judul Banner</label>
-                        <input type="text" name="welcome_title" class="form-control" 
-                               value="{{ $settings->welcome_title ?? 'Selamat Datang!' }}"
-                               placeholder="Judul welcome banner">
-                    </div>
-                </div>
-                <div class="col-md-6">
-                    <div class="form-group">
-                        <label>Tampilkan Banner</label>
-                        <div class="custom-control custom-switch mt-2">
-                            <input type="checkbox" class="custom-control-input" 
-                                   id="show_banner" name="show_banner" 
-                                   {{ $settings->show_banner ? 'checked' : '' }}>
-                            <label class="custom-control-label" for="show_banner">
-                                {{ $settings->show_banner ? 'Aktif' : 'Nonaktif' }}
-                            </label>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="form-group">
-                <label>Pesan Banner</label>
-                <textarea name="welcome_message" class="form-control" rows="4" 
-                          placeholder="Pesan selamat datang untuk client...">{{ $settings->welcome_message ?? '' }}</textarea>
-                <small class="text-muted">Mendukung @username Telegram</small>
-            </div>
-            
-            <hr>
-            
-            <h6 class="text-primary mb-3">
-                <i class="fas fa-ban"></i> Custom Pesan Akses Ditolak
-            </h6>
-            
-            <div class="form-group">
-                <label>Pesan Abort/Akses Ditolak</label>
-                <textarea name="abort_message" class="form-control" rows="3" 
-                          placeholder="Pesan yang muncul saat admin lain mencoba akses menu terlarang...">{{ $settings->abort_message ?? '' }}</textarea>
-                <small class="text-muted">Kosongkan untuk menggunakan pesan default</small>
-            </div>
-            
-            <div class="text-right">
-                <button type="button" id="saveConfig" class="btn btn-primary btn-lg">
-                    <i class="fas fa-save"></i> Simpan Konfigurasi
-                </button>
-            </div>
-            
-        </form>
-    </div>
+        </div>
+        
+        <hr style="border-color: var(--glass-border);">
+        
+        <h6 style="color: #A78BFA; margin-bottom: 20px; font-weight: 700;">
+            <i class="fas fa-ban me-2"></i> Custom Pesan Akses Ditolak
+        </h6>
+        
+        <div class="mb-4">
+            <textarea name="abort_message" class="form-control pm-input" rows="3" placeholder="Pesan saat admin lain mencoba akses...">{{ $settings->abort_message ?? '' }}</textarea>
+        </div>
+        
+        <div class="text-end">
+            <button type="button" id="saveConfigBtn" class="pm-btn">
+                <i class="fas fa-save me-2"></i> Simpan Konfigurasi
+            </button>
+        </div>
+    </form>
 </div>
 
 <script>
-    $('#show_banner').on('change', function() {
-        var label = $(this).siblings('label');
-        label.text($(this).is(':checked') ? 'Aktif' : 'Nonaktif');
-    });
-    
-    $('#saveConfig').on('click', function(e) {
+    $('#saveConfigBtn').on('click', function(e) {
         e.preventDefault();
-        
         var btn = $(this);
-        var originalText = btn.html();
+        var originalHtml = btn.html();
         
         btn.html('<i class="fas fa-spinner fa-spin"></i> Menyimpan...');
         btn.prop('disabled', true);
         
-        var formData = $('#configForm').serialize();
-        
         $.ajax({
             url: '{{ route("admin.protect-manager.config.save") }}',
             type: 'POST',
-            data: formData,
+            data: $('#configForm').serialize(),
             success: function(response) {
                 if (response.success) {
-                    Swal.fire({
-                        icon: 'success',
-                        title: 'Konfigurasi Tersimpan!',
-                        text: 'Semua pengaturan telah diperbarui',
-                        timer: 2000,
-                        showConfirmButton: false
+                    const Toast = Swal.mixin({
+                        toast: true, position: 'top-end', showConfirmButton: false,
+                        timer: 2500, timerProgressBar: true,
+                        background: '#1a1a2e', color: '#fff'
                     });
+                    Toast.fire({ icon: 'success', title: '✅ Konfigurasi Tersimpan!' });
                 }
             },
             error: function(xhr) {
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Error!',
-                    text: xhr.responseJSON?.message || 'Gagal menyimpan konfigurasi'
-                });
+                Swal.fire({ icon: 'error', title: 'Gagal!', text: xhr.responseJSON?.message || 'Terjadi kesalahan', background: '#1a1a2e', color: '#fff' });
             },
             complete: function() {
-                btn.html(originalText);
+                btn.html(originalHtml);
                 btn.prop('disabled', false);
             }
         });
