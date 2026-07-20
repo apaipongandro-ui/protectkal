@@ -4,7 +4,6 @@
    ============================================================ */
 
 :root {
-    /* Canva-Inspired Gradient Colors */
     --gradient-1: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     --gradient-2: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
     --gradient-3: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
@@ -12,7 +11,6 @@
     --gradient-5: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
     --gradient-6: linear-gradient(135deg, #a18cd1 0%, #fbc2eb 100%);
     --gradient-canva: linear-gradient(135deg, #8B5CF6 0%, #EC4899 50%, #F43F5E 100%);
-    
     --bg-primary: #0f0f1a;
     --bg-secondary: #1a1a2e;
     --glass-bg: rgba(255, 255, 255, 0.05);
@@ -22,7 +20,6 @@
     --text-muted: rgba(255, 255, 255, 0.5);
 }
 
-/* Reset & Base */
 .protect-manager-v2 {
     font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
     position: relative;
@@ -31,9 +28,6 @@
     color: var(--text-primary);
 }
 
-/* ============================================================
-   ANIMATED BACKGROUND
-   ============================================================ */
 .pm-bg-animation {
     position: fixed;
     top: 0;
@@ -87,9 +81,6 @@
     75% { transform: translate(-60px, -40px) scale(1.05); }
 }
 
-/* ============================================================
-   HEADER
-   ============================================================ */
 .pm-header {
     background: var(--glass-bg);
     backdrop-filter: blur(30px);
@@ -145,9 +136,6 @@
     display: inline-block;
 }
 
-/* ============================================================
-   STATS CARDS
-   ============================================================ */
 .pm-stats-grid {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
@@ -210,9 +198,6 @@
     letter-spacing: 1px;
 }
 
-/* ============================================================
-   TABS
-   ============================================================ */
 .pm-tabs {
     display: flex;
     gap: 12px;
@@ -247,9 +232,6 @@
     box-shadow: 0 10px 30px rgba(139, 92, 246, 0.4);
 }
 
-/* ============================================================
-   PROTECT CARDS
-   ============================================================ */
 .pm-protect-grid {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
@@ -316,9 +298,6 @@
     line-height: 1.4;
 }
 
-/* ============================================================
-   BADGE
-   ============================================================ */
 .pm-badge {
     padding: 8px 18px;
     border-radius: 50px;
@@ -329,9 +308,6 @@
     transition: all 0.3s ease;
 }
 
-/* ============================================================
-   SWITCH
-   ============================================================ */
 .pm-switch .form-check-input {
     width: 3.5em !important;
     height: 1.8em !important;
@@ -351,9 +327,6 @@
     border-color: rgba(139, 92, 246, 0.5) !important;
 }
 
-/* ============================================================
-   BUTTONS
-   ============================================================ */
 .pm-btn {
     background: var(--gradient-canva);
     color: white;
@@ -390,9 +363,6 @@
     color: white;
 }
 
-/* ============================================================
-   INPUTS
-   ============================================================ */
 .pm-input {
     background: var(--glass-bg) !important;
     border: 1px solid var(--glass-border) !important;
@@ -413,9 +383,6 @@
     color: var(--text-muted);
 }
 
-/* ============================================================
-   FOOTER
-   ============================================================ */
 .pm-footer {
     text-align: center;
     padding: 30px 0;
@@ -425,18 +392,9 @@
     font-size: 0.9em;
 }
 
-/* ============================================================
-   ANIMATIONS
-   ============================================================ */
 @keyframes pm-fadeInUp {
-    from {
-        opacity: 0;
-        transform: translateY(40px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
+    from { opacity: 0; transform: translateY(40px); }
+    to { opacity: 1; transform: translateY(0); }
 }
 
 .animate-in {
@@ -452,48 +410,19 @@
 .delay-7 { animation-delay: 0.7s; }
 .delay-8 { animation-delay: 0.8s; }
 
-/* ============================================================
-   SCROLLBAR
-   ============================================================ */
-::-webkit-scrollbar {
-    width: 6px;
-}
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--gradient-canva); border-radius: 3px; }
 
-::-webkit-scrollbar-track {
-    background: transparent;
-}
-
-::-webkit-scrollbar-thumb {
-    background: var(--gradient-canva);
-    border-radius: 3px;
-}
-
-/* ============================================================
-   RESPONSIVE
-   ============================================================ */
 @media (max-width: 1200px) {
-    .pm-protect-grid {
-        grid-template-columns: 1fr;
-    }
-    .pm-stats-grid {
-        grid-template-columns: repeat(2, 1fr);
-    }
+    .pm-protect-grid { grid-template-columns: 1fr; }
+    .pm-stats-grid { grid-template-columns: repeat(2, 1fr); }
 }
 
 @media (max-width: 768px) {
-    .pm-stats-grid {
-        grid-template-columns: 1fr;
-    }
-    .pm-header {
-        padding: 25px;
-    }
-    .pm-header h1 {
-        font-size: 1.5em;
-    }
-    .pm-tabs {
-        flex-direction: column;
-    }
-    .pm-tab {
-        text-align: center;
-    }
+    .pm-stats-grid { grid-template-columns: 1fr; }
+    .pm-header { padding: 25px; }
+    .pm-header h1 { font-size: 1.5em; }
+    .pm-tabs { flex-direction: column; }
+    .pm-tab { text-align: center; }
 }
